@@ -1,6 +1,6 @@
 const express = require("express"); 
 const app = express(); 
-const { getAllTopics } = require("./controllers/topics.controller")
+const { getAllTopics } = require("./controllers/topicsController")
 
 app.get("/api/topics", getAllTopics);
 
@@ -15,15 +15,10 @@ app.use((err, req, res, next) => {
 })
 
 app.use((err, req, res, next) => { 
-    console.log('hello from errors', err)
     if(err.code === "22P02") {
         res.status(500).send({msg: "Bad request"})
     }
-    else next(err, req, res, next)
+    else next(err)
 })
 
-
-app.listen(3030, () => {
-    console.log("server is listening on port 3030")
-})
 module.exports = app

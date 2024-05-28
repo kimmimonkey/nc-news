@@ -49,9 +49,9 @@ describe("GET /api/topics", () => {
     test("responds with a topics array of objects from database", () => {
         return request(app)
         .get("/api/topics")
-        .then(({ body: {body: rows} }) => {
-            expect(Array.isArray(rows)).toBe(true); 
-            rows.forEach((topic) => {
+        .then(({ body: { topics }}) => {
+            expect(Array.isArray(topics)).toBe(true); 
+            topics.forEach((topic) => {
                 expect(typeof topic).toBe("object");
             })
         })
@@ -59,8 +59,8 @@ describe("GET /api/topics", () => {
     test("responds with a topics array of objects with properties of slug and description", () => { 
         return request(app)
         .get("/api/topics")
-        .then((({ body }) => {
-            const topics = body.body; 
+        .then((({ body: { topics} }) => {
+            expect(topics.length).toBe(3)
             topics.forEach((topic) => {
                 expect(topic).toMatchObject({
                     description: expect.any(String), 
