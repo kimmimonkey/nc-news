@@ -29,7 +29,7 @@ afterAll(() => {
     return db.end();
 })
 
-describe.only(".all with any invalid endpoint", () => {
+describe(".all with any invalid endpoint", () => {
     test("responds with status: 404 and an error message", () => {
         return request(app)
         .get("/api/animals")
