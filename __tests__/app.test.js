@@ -1,24 +1,9 @@
-// // Description
-// Should:
-
-// be available on endpoint /api/topics.
-// get all topics.
-// Responds with:
-
-// an array of topic objects, each of which should have the following properties:
-// slug
-// description
-// As this is the first endpoint, you will need to set up your testing suite.
-
-// Consider what errors could occur with this endpoint. As this is your first endpoint you may wish to also consider any general errors that could occur when making any type of request to your api. The errors that you identify should be fully tested for.
-
-// Note: although you may consider handling a 500 error in your app, we would not expect you to explicitly test for this.
-
 const request = require("supertest"); 
 const app = require("../app");
 const db = require("../db/connection");
 const data = require("../db/data/test-data");
 const seed = require("../db/seeds/seed")
+const fs = require("fs/promises");
 
 
 beforeEach(() => { 
@@ -69,5 +54,30 @@ describe("GET /api/topics", () => {
             })
         }))
     })
+})
 
+describe("GET /api", () => {
+    test("status: 200", () => { 
+        return request(app)
+        .get("/api")
+        .expect(200)
+
+    })
+    test("responds with an object describing all other endpoints available", () => { 
+        return request(app)
+        .get("/api")
+        .then(({body: {endpoints}}) => {
+            expect(typeof endpoints).toBe("object")
+        })
+    })
+    test("responds with an endpoints object, where each endpoint has a description property", () => {
+        return request(app)
+        .get("/api")
+        .then( async ({body: {endpoints}}) => {
+            const data = await fs.readFile("./endpoints.json")
+            const parsedData = JSON.parse(data)
+            expect(endpoints).toEqual(parsedData)
+        })
+
+    })
 })
