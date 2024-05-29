@@ -15,7 +15,7 @@ afterAll(() => {
 })
 
 describe(".all with any invalid endpoint", () => {
-    test("responds with status: 404 and an error message", () => {
+    test("status: 404, responds with an error message", () => {
         return request(app)
         .get("/api/animals")
         .expect(404)
@@ -26,24 +26,10 @@ describe(".all with any invalid endpoint", () => {
 })
 
 describe("GET /api/topics", () => { 
-    test("status: 200", () => {
-        return request(app)
-        .get("/api/topics")
-        .expect(200)
-    })
-    test("responds with a topics array of objects from database", () => {
-        return request(app)
-        .get("/api/topics")
-        .then(({ body: { topics }}) => {
-            expect(Array.isArray(topics)).toBe(true); 
-            topics.forEach((topic) => {
-                expect(typeof topic).toBe("object");
-            })
-        })
-    })
     test("responds with a topics array of objects with properties of slug and description", () => { 
         return request(app)
         .get("/api/topics")
+        .expect(200)
         .then((({ body: { topics} }) => {
             expect(topics.length).toBe(3)
             topics.forEach((topic) => {
@@ -57,15 +43,10 @@ describe("GET /api/topics", () => {
 })
 
 describe("GET /api", () => {
-    test("status: 200", () => { 
+    test("status: 200 responds with an object describing all other endpoints available", () => { 
         return request(app)
         .get("/api")
         .expect(200)
-
-    })
-    test("responds with an object describing all other endpoints available", () => { 
-        return request(app)
-        .get("/api")
         .then(({body: {endpoints}}) => {
             expect(typeof endpoints).toBe("object")
         })
@@ -81,3 +62,31 @@ describe("GET /api", () => {
 
     })
 })
+
+    describe("GET /api/articles/:article_id/", () => {
+        test("status: 200, responds with the specified article object with the properties author, title, article_id, body, topic, created_at, votes and article_img_url", () => {
+            return request(app)
+            .get("/api/articles/4")
+            .expect(200)
+            .then(({body}) => { 
+                expect(body.article).toMatchObject({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number), 
+                    body: expect.any(String),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String)
+                })
+            })
+        })
+        test("status: 400, responds with an error message when passed a bad article_id", () => {
+            return request(app)
+            .get("/api/articles/notAnId")
+            .expect(400)
+            .then(({ body }) => { 
+                expect(body.msg).toBe("Invalid input")
+            })
+        })
+    })
