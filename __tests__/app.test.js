@@ -89,4 +89,12 @@ describe("GET /api", () => {
                 expect(body.msg).toBe("Invalid input")
             })
         })
+        test("status: 404, responds with an error message when passed a valid article_id that doesn't exist in the database", () => {
+            return request(app)
+            .get("/api/articles/9999")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Not found")
+            })
+        })
     })
