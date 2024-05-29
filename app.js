@@ -1,15 +1,17 @@
 const express = require("express"); 
 const app = express(); 
-const { getAllTopics, getAllEndpoints, getArticleById, getAllArticles } = require("./controllers/appController")
+const { getAllTopics, getAllEndpoints, getArticleById, getAllArticles, getArticleComments } = require("./controllers/appController")
 
 
 app.get("/api/topics", getAllTopics);
 
 app.get("/api", getAllEndpoints);
 
-app.get("/api/articles", getAllArticles)
+app.get("/api/articles", getAllArticles);
 
-app.get("/api/articles/:article_id", getArticleById)
+app.get("/api/articles/:article_id", getArticleById);
+
+app.get("/api/articles/:article_id/comments", getArticleComments);
 
 app.all("/*", (req, res) => { 
     res.status(404).send({msg: "We don't have that here, sorry!"})
