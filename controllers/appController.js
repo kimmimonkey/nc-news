@@ -1,4 +1,4 @@
-const { fetchAllTopics, fetchAllEndpoints, fetchArticleById, fetchAllArticles } = require("../models/appModel")
+const { fetchAllTopics, fetchAllEndpoints, fetchArticleById, fetchAllArticles, fetchArticleComments } = require("../models/appModel")
 
 
 exports.getAllTopics = (req, res, next) => {
@@ -14,20 +14,26 @@ exports.getAllEndpoints = (req, res, next) => {
         .then((endpoints) => {
             return res.status(200).send({ endpoints });
         });
-        
+
 };
 
 
-exports.getAllArticles = (req, res, next) => { 
-    const { sort_by } = req.query; 
+exports.getAllArticles = (req, res, next) => {
+    const { sort_by } = req.query;
     fetchAllArticles(sort_by)
-    .then((articles) => {
-        return res.status(200).send({articles});
-    });
+        .then((articles) => {
+            return res.status(200).send({ articles });
+        });
 };
 
 exports.getArticleById = (req, res, next) => {
     const { article_id } = req.params;
     fetchArticleById(article_id).then((article) => res.status(200).send({ article }))
-    .catch(next);
-    };
+        .catch(next);
+};
+
+exports.getArticleComments = (req, res, next) => {
+    const { article_id } = req.params;
+    fetchArticleComments(article_id).then((comments) => res.status(200).send({ comments }))
+        .catch(next);
+};

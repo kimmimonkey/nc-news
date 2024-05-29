@@ -39,14 +39,10 @@ exports.fetchAllArticles = (sort_by = "created_at", order = "DESC") => {
 
 }
 
-
-
-
-
 exports.fetchArticleById = (article_id) => {
     return db
         .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
-        .then(({ rows }) => {
+        .then (({ rows }) => {
             const article = rows[0];
             if (!article) {
                 return Promise.reject({
@@ -58,4 +54,16 @@ exports.fetchArticleById = (article_id) => {
 
 
         });
+}
+
+exports.fetchArticleComments = (article_id) => {
+    return db
+    .query(`SELECT * FROM comments WHERE article_id = $1;`, [article_id])
+    .then(({ rows: comments  }) => {
+        if (comments.length === 0) {
+            return exports.fetchArticleById(article_id) 
+            .then(() => [])
+        } else 
+        return comments 
+    })
 }
