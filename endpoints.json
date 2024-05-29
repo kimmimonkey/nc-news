@@ -27,7 +27,7 @@
     }
   },
   "GET /api/articles/:article_id": { 
-    "decription": "serves a apecified article",
+    "decription": "serves a specified article",
     "queries": ["article_id"],
     "exampleResponse": {
       "author": "weegembump",
