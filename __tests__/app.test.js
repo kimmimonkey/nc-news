@@ -26,24 +26,10 @@ describe(".all with any invalid endpoint", () => {
 })
 
 describe("GET /api/topics", () => { 
-    test("status: 200", () => {
-        return request(app)
-        .get("/api/topics")
-        .expect(200)
-    })
-    test("responds with a topics array of objects from database", () => {
-        return request(app)
-        .get("/api/topics")
-        .then(({ body: { topics }}) => {
-            expect(Array.isArray(topics)).toBe(true); 
-            topics.forEach((topic) => {
-                expect(typeof topic).toBe("object");
-            })
-        })
-    })
     test("responds with a topics array of objects with properties of slug and description", () => { 
         return request(app)
         .get("/api/topics")
+        .expect(200)
         .then((({ body: { topics} }) => {
             expect(topics.length).toBe(3)
             topics.forEach((topic) => {
@@ -81,3 +67,4 @@ describe("GET /api", () => {
 
     })
 })
+
