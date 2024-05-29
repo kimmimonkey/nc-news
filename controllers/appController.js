@@ -1,4 +1,4 @@
-const { fetchAllTopics, fetchAllEndpoints, fetchArticleById } = require("../models/topicsModel")
+const { fetchAllTopics, fetchAllEndpoints, fetchArticleById, fetchAllArticles } = require("../models/appModel")
 
 
 exports.getAllTopics = (req, res, next) => {
@@ -15,6 +15,15 @@ exports.getAllEndpoints = (req, res, next) => {
             return res.status(200).send({ endpoints });
         });
         
+};
+
+
+exports.getAllArticles = (req, res, next) => { 
+    const { sort_by } = req.query; 
+    fetchAllArticles(sort_by)
+    .then((articles) => {
+        return res.status(200).send({articles});
+    });
 };
 
 exports.getArticleById = (req, res, next) => {
