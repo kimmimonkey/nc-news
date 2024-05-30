@@ -67,3 +67,9 @@ exports.fetchArticleComments = (article_id) => {
         return comments 
     })
 }
+
+exports.addComment = (id, username, comment, date) => {
+    return db
+   .query(`INSERT INTO comments (body, votes, author, article_id, created_at) 
+   VALUES($1, 0, $2, $3, $4) RETURNING *;`, [comment, username, id, date])
+};

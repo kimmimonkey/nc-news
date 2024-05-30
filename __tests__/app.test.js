@@ -129,7 +129,7 @@ describe("/api/articles", () => {
     })
 })
 
-describe("/api/articles/:article_id/comments", () => {
+describe("GET /api/articles/:article_id/comments", () => {
     test("status: 200, responds with an array of comment objects on specified article, with the properties comment_id, votes, created_at, author, body and article_id", () => {
         return request(app)
             .get("/api/articles/5/comments")
@@ -163,5 +163,23 @@ describe("/api/articles/:article_id/comments", () => {
         .then(({ body }) => {
             expect(body.msg).toBe("Not found")
         })
+    })
+})
+describe("POST /api/articles/:article_id/comments", () => {
+    test("status: 201, responds with a comment object with the properties body,votes, author, article_id and created_at", () => {
+        return request(app)
+        .post("/api/articles/5/comments")
+        .send({username: "butter_bridge", body: "Focus, Hiccup!"})
+        .expect(201)
+        .then(({body}) => {
+            expect(body.comment).toEqual({
+                comment_id: expect.any(Number),
+                body: "Focus, Hiccup!",
+                votes: 0,
+                author: "butter_bridge",
+                article_id: 5,
+                created_at: expect.any(String)
+            })
+        }) 
     })
 })
