@@ -72,5 +72,17 @@
       "article_id": 17,
       "created_at": 1586387400000
     }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description" : "",
+    "queries" : ["article_id"],
+    "exampleResponse": {
+      "comment_id": 43,
+      "votes": 0,
+      "created_at": 1586387400000,
+      "author": "tickle122",
+      "body": "Facilis corporis animi et non non minus nisi. Magnam et sequi dolorum fugiat ab assumenda.",
+      "article_id": 18
+    }
   }
 }
