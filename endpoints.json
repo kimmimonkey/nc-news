@@ -41,5 +41,36 @@
       "article_img_url": "https://images.pexels.com/photos/4974912/pexels-photo-4974912.jpeg?w=700&h=700"
     }
 
+    },
+  "GET /api/articles/:article_id/comments": { 
+    "decription": "serves an array containing all the comment objects for a specified article",
+    "queries": ["article_id"],
+    "exampleResponse": [
+      {
+        "body": "Quod qui quia dignissimos sit tempore vel reprehenderit. Ipsa ipsa veritatis architecto corporis et et non. Sed alias occaecati eum dignissimos sint eius. Ad ea iste quas quia velit libero voluptatem voluptatem. Animi illo nisi nulla quia sapiente omnis dolorem nulla. Sunt dolor similique.",
+        "votes": -5,
+        "author": "weegembump",
+        "article_id": 17,
+        "created_at": 1585948620000
+      },
+      {
+        "body": "Facilis corporis animi et non non minus nisi. Magnam et sequi dolorum fugiat ab assumenda.",
+        "votes": 12,
+        "author": "tickle122",
+        "article_id": 17,
+        "created_at": 1586387400000
+      }
+      ]
+  },
+  "POST /api/articles/:article_id/comments": {
+    "decription": "posts a comment to a specified article",
+    "queries": ["article_id"],
+    "exampleResponse": {
+      "body": "Facilis corporis animi et non non minus nisi. Magnam et sequi dolorum fugiat ab assumenda.",
+      "votes": 12,
+      "author": "tickle122",
+      "article_id": 17,
+      "created_at": 1586387400000
     }
+  }
 }

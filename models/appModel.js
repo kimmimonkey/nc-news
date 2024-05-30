@@ -42,7 +42,7 @@ exports.fetchAllArticles = (sort_by = "created_at", order = "DESC") => {
 exports.fetchArticleById = (article_id) => {
     return db
         .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
-        .then (({ rows }) => {
+        .then(({ rows }) => {
             const article = rows[0];
             if (!article) {
                 return Promise.reject({
@@ -58,12 +58,42 @@ exports.fetchArticleById = (article_id) => {
 
 exports.fetchArticleComments = (article_id) => {
     return db
-    .query(`SELECT * FROM comments WHERE article_id = $1;`, [article_id])
-    .then(({ rows: comments  }) => {
-        if (comments.length === 0) {
-            return exports.fetchArticleById(article_id) 
-            .then(() => [])
-        } else 
-        return comments 
-    })
+        .query(`SELECT * FROM comments WHERE article_id = $1;`, [article_id])
+        .then(({ rows: comments }) => {
+            if (comments.length === 0) {
+                return exports.fetchArticleById(article_id)
+                    .then(() => [])
+            } else
+                return comments
+        })
 }
+
+exports.addComment = (article_id, username, comment, date) => {
+    return db
+        .query(`SELECT * from articles WHERE article_id = $1`, [article_id])
+        .then(({ rows: articles }) => {
+                if (articles.length === 0) {
+                return Promise.reject({
+                    status: 404,
+                    msg: "Not found"
+                })
+            } else return
+        })
+        .then(() => {
+            return db
+            .query(`SELECT * from users WHERE username = $1;`, [username])
+            .then(({ rows :users}) => { 
+                if (users.length === 0) {
+                    return Promise.reject({
+                        status: 401,
+                        msg: "Unauthorized"
+                    })
+                }
+                })
+            })
+            .then(() => {
+                return db
+                .query(`INSERT INTO comments (body, votes, author, article_id, created_at) 
+                VALUES($1, 0, $2, $3, $4) RETURNING *;`, [comment, username, article_id, date])
+            }) 
+        };
