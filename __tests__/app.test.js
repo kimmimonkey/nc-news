@@ -165,6 +165,7 @@ describe("GET /api/articles/:article_id/comments", () => {
             })
     })
 })
+
 describe("POST /api/articles/:article_id/comments", () => {
     test("status: 201, responds with a comment object with the properties body,votes, author, article_id and created_at", () => {
         return request(app)
@@ -218,9 +219,29 @@ describe("POST /api/articles/:article_id/comments", () => {
         .then(({ body }) => {
             expect(body.msg).toBe("Unauthorized")
         })
-    })
-    
-
-    
+    }) 
 
 })
+
+describe("PATCH /api/articles/:article_id", () => {
+    test("status: 200, responds with the specified article object with the properties author, title, article_id, body, topic, created_at, votes and article_img_url where votes has been updated", () => { 
+        return request(app)
+        .patch("/api/articles/5")
+        .expect(200)
+        .send({ inc_votes: 5})
+        .then(({ body: { article } }) => { 
+            expect(article).toMatchObject({
+                author: expect.any(String),
+                title: expect.any(String),
+                article_id: expect.any(Number),
+                body: expect.any(String),
+                topic: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                article_img_url: expect.any(String)
+            })
+        expect(article.votes).toBe(5)
+        })
+    })
+})
+
