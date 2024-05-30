@@ -150,36 +150,77 @@ describe("GET /api/articles/:article_id/comments", () => {
     })
     test("status: 400, responds with an error message when passed a bad article_id", () => {
         return request(app)
-        .get("/api/articles/notAnId/comments")
-        .expect(400)
-        .then(({ body }) => {
-            expect(body.msg).toBe("Invalid input")
-        })
+            .get("/api/articles/notAnId/comments")
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid input")
+            })
     })
     test("status: 404, responds with an error message when passed a valid article_id that doesn't exist in the database", () => {
         return request(app)
-        .get("/api/articles/9999/comments")
-        .expect(404)
-        .then(({ body }) => {
-            expect(body.msg).toBe("Not found")
-        })
+            .get("/api/articles/9999/comments")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Not found")
+            })
     })
 })
 describe("POST /api/articles/:article_id/comments", () => {
     test("status: 201, responds with a comment object with the properties body,votes, author, article_id and created_at", () => {
         return request(app)
-        .post("/api/articles/5/comments")
-        .send({username: "butter_bridge", body: "Focus, Hiccup!"})
-        .expect(201)
-        .then(({body}) => {
-            expect(body.comment).toEqual({
-                comment_id: expect.any(Number),
-                body: "Focus, Hiccup!",
-                votes: 0,
-                author: "butter_bridge",
-                article_id: 5,
-                created_at: expect.any(String)
+            .post("/api/articles/5/comments")
+            .send({ username: "butter_bridge", body: "Focus, Hiccup!" })
+            .expect(201)
+            .then(({ body }) => {
+                expect(body.comment).toEqual({
+                    comment_id: expect.any(Number),
+                    body: "Focus, Hiccup!",
+                    votes: 0,
+                    author: "butter_bridge",
+                    article_id: 5,
+                    created_at: expect.any(String)
+                })
             })
-        }) 
     })
+    test("status: 400, responds with an error message when passed a bad article_id", () => {
+        return request(app)
+            .post("/api/articles/notAnId/comments")
+            .send({ username: "butter_bridge", body: "Focus, Hiccup!" })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid input")
+            })
+    })
+    test("status: 400, responds with an error message when passed an empty comment body", () => {
+        return request(app)
+        .post("/api/articles/5/comments")
+        .send({})
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Invalid input")
+        })
+
+    })
+    test("status: 404, responds with an error message when passed a valid article_id that doesn't exist yet", () => {
+        return request(app)
+        .post("/api/articles/9999/comments")
+        .send(({username: "butter_bridge", body: "Focus, Hiccup!"}))
+        .expect((404))
+        .then(({ body }) => {
+            expect(body.msg).toBe("Not found")
+        })
+    })
+    test("status: 401, responds with an error message when passed a username that doesn't exist", () => {
+        return request(app)
+        .post("/api/articles/5/comments")
+        .send(({username: "notAUsername", body: "Focus, Hiccup!"}))
+        .expect((401))
+        .then(({ body }) => {
+            expect(body.msg).toBe("Unauthorized")
+        })
+    })
+    
+
+    
+
 })
