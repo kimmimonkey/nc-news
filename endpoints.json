@@ -6,33 +6,45 @@
     "description": "serves an array of all topics",
     "queries": [],
     "exampleResponse": {
-      "topics": [{ "slug": "football", "description": "Footie!" }]
+      "topics": [
+        {
+          "slug": "football",
+          "description": "Footie!"
+        }
+      ]
     }
   },
   "GET /api/articles": {
     "description": "serves an array of all articles",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": [
+      "author",
+      "topic",
+      "sort_by",
+      "order"
+    ],
     "exampleResponse": {
       "articles": [
         {
           "author": "weegembump",
-          "title":  "Seafood substitutions are increasing",
+          "title": "Seafood substitutions are increasing",
           "article_id": "4",
           "topic": "cooking",
           "created_at": "2018-05-30T15:59:13.341Z",
           "votes": 0,
           "article_img_url": "https://images.pexels.com/photos/4974912/pexels-photo-4974912.jpeg?w=700&h=700",
           "comment_count": "6"
-    }  
+        }
       ]
     }
   },
-  "GET /api/articles/:article_id": { 
+  "GET /api/articles/:article_id": {
     "decription": "serves a specified article",
-    "queries": ["article_id"],
+    "queries": [
+      "article_id"
+    ],
     "exampleResponse": {
       "author": "weegembump",
-      "title":  "Seafood substitutions are increasing",
+      "title": "Seafood substitutions are increasing",
       "article_id": "4",
       "body": "Text from the article..",
       "topic": "cooking",
@@ -40,11 +52,12 @@
       "votes": 0,
       "article_img_url": "https://images.pexels.com/photos/4974912/pexels-photo-4974912.jpeg?w=700&h=700"
     }
-
-    },
-  "GET /api/articles/:article_id/comments": { 
+  },
+  "GET /api/articles/:article_id/comments": {
     "decription": "serves an array containing all the comment objects for a specified article",
-    "queries": ["article_id"],
+    "queries": [
+      "article_id"
+    ],
     "exampleResponse": [
       {
         "body": "Quod qui quia dignissimos sit tempore vel reprehenderit. Ipsa ipsa veritatis architecto corporis et et non. Sed alias occaecati eum dignissimos sint eius. Ad ea iste quas quia velit libero voluptatem voluptatem. Animi illo nisi nulla quia sapiente omnis dolorem nulla. Sunt dolor similique.",
@@ -60,11 +73,13 @@
         "article_id": 17,
         "created_at": 1586387400000
       }
-      ]
+    ]
   },
   "POST /api/articles/:article_id/comments": {
     "decription": "posts a comment to a specified article",
-    "queries": ["article_id"],
+    "queries": [
+      "article_id"
+    ],
     "exampleResponse": {
       "body": "Facilis corporis animi et non non minus nisi. Magnam et sequi dolorum fugiat ab assumenda.",
       "votes": 12,
@@ -74,15 +89,27 @@
     }
   },
   "PATCH /api/articles/:article_id": {
-    "description" : "",
-    "queries" : ["article_id"],
+    "description": "updates the vote property on an article",
+    "queries": [
+      "article_id"
+    ],
     "exampleResponse": {
-      "comment_id": 43,
-      "votes": 0,
-      "created_at": 1586387400000,
-      "author": "tickle122",
-      "body": "Facilis corporis animi et non non minus nisi. Magnam et sequi dolorum fugiat ab assumenda.",
-      "article_id": 18
+      "author": "weegembump",
+      "title": "Seafood substitutions are increasing",
+      "article_id": "4",
+      "body": "Text from the article..",
+      "topic": "cooking",
+      "created_at": "2018-05-30T15:59:13.341Z",
+      "votes": 20,
+      "article_img_url": "https://images.pexels.com/photos/4974912/pexels-photo-4974912.jpeg?w=700&h=700"
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "removes the specified comment",
+    "queries": [
+      "article_id"
+    ],
+    "exampleResponse": {
     }
   }
 }
