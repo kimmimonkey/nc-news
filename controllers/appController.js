@@ -1,4 +1,4 @@
-const { fetchAllTopics, fetchAllEndpoints, fetchArticleById, fetchAllArticles, fetchArticleComments, addComment, updateArticleVotes } = require("../models/appModel")
+const { fetchAllTopics, fetchAllEndpoints, fetchArticleById, fetchAllArticles, fetchArticleComments, addComment, updateArticleVotes, removeCommentById } = require("../models/appModel")
 
 
 exports.getAllTopics = (req, res, next) => {
@@ -62,4 +62,12 @@ exports.patchArticle = (req, res, next) => {
         res.status(200).send({ article })
     })
     .catch(next)
+}
+
+exports.deleteComment = (req, res, next) => {
+    const { comment_id } = req.params
+    removeCommentById(comment_id)
+    .then(({ rows }) => {
+        res.status(204).send(rows[0])
+    })
 }
