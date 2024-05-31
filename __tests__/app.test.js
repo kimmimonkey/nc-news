@@ -194,54 +194,90 @@ describe("POST /api/articles/:article_id/comments", () => {
     })
     test("status: 400, responds with an error message when passed an empty comment body", () => {
         return request(app)
-        .post("/api/articles/5/comments")
-        .send({})
-        .expect(400)
-        .then(({ body }) => {
-            expect(body.msg).toBe("Invalid input")
-        })
+            .post("/api/articles/5/comments")
+            .send({})
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid input")
+            })
 
     })
     test("status: 404, responds with an error message when passed a valid article_id that doesn't exist yet", () => {
         return request(app)
-        .post("/api/articles/9999/comments")
-        .send(({username: "butter_bridge", body: "Focus, Hiccup!"}))
-        .expect((404))
-        .then(({ body }) => {
-            expect(body.msg).toBe("Not found")
-        })
+            .post("/api/articles/9999/comments")
+            .send(({ username: "butter_bridge", body: "Focus, Hiccup!" }))
+            .expect((404))
+            .then(({ body }) => {
+                expect(body.msg).toBe("Not found")
+            })
     })
     test("status: 401, responds with an error message when passed a username that doesn't exist", () => {
         return request(app)
-        .post("/api/articles/5/comments")
-        .send(({username: "notAUsername", body: "Focus, Hiccup!"}))
-        .expect((401))
-        .then(({ body }) => {
-            expect(body.msg).toBe("Unauthorized")
-        })
-    }) 
+            .post("/api/articles/5/comments")
+            .send(({ username: "notAUsername", body: "Focus, Hiccup!" }))
+            .expect((401))
+            .then(({ body }) => {
+                expect(body.msg).toBe("Unauthorized")
+            })
+    })
 
 })
 
 describe("PATCH /api/articles/:article_id", () => {
-    test("status: 200, responds with the specified article object with the properties author, title, article_id, body, topic, created_at, votes and article_img_url where votes has been updated", () => { 
+    test("status: 200, responds with the specified article object with the properties author, title, article_id, body, topic, created_at, votes and article_img_url where votes has been updated", () => {
         return request(app)
-        .patch("/api/articles/5")
-        .expect(200)
-        .send({ inc_votes: 5})
-        .then(({ body: { article } }) => { 
-            expect(article).toMatchObject({
-                author: expect.any(String),
-                title: expect.any(String),
-                article_id: expect.any(Number),
-                body: expect.any(String),
-                topic: expect.any(String),
-                created_at: expect.any(String),
-                votes: expect.any(Number),
-                article_img_url: expect.any(String)
+            .patch("/api/articles/5")
+            .expect(200)
+            .send({ inc_votes: 5 })
+            .then(({ body: { article } }) => {
+                expect(article).toMatchObject({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number),
+                    body: expect.any(String),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String)
+                })
+                expect(article.votes).toBe(5)
             })
-        expect(article.votes).toBe(5)
-        })
     })
-})
+    test("status: 400, responds with an error message when passed a bad article_id", () => {
+        return request(app)
+            .patch("/api/articles/notAnId")
+            .expect(400)
+            .send({ inc_votes: 5 })
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid input")
+            })
+    })
+    test("status: 400, responds with an error message when passed an empty inc_votes body", () => {
+        return request(app)
+            .patch("/api/articles/5")
+            .send({})
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid input")
+            })
+    })
+    test("status: 400 responds with an error message when passed an invalid inc_votes value", () => { 
+        return request(app)
+            .patch("/api/articles/5")
+            .send({ inc_votes: "notANumber" })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid input")
+            })
+    })
+    test("status: 404, responds with an error message when passed an article that doesn't exist", () => {
+        return request(app)
+            .patch("/api/articles/9999")
+            .expect(404)
+            .send({ inc_votes: 5 })
+            .then(({ body }) => {
+                expect(body.msg).toBe("Not found")
+            })
+    })
 
+})

@@ -54,6 +54,12 @@ exports.postComment = (req, res, next) => {
 exports.patchArticle = (req, res, next) => { 
     const { article_id } = req.params; 
     const { inc_votes } = req.body;
+    if (!inc_votes) {
+        return res.status(400).send({msg: "Invalid input"})
+    } 
     updateArticleVotes(article_id, inc_votes)
-    .then((article) => res.status(200).send({ article }))
+    .then((article) => {
+        res.status(200).send({ article })
+    })
+    .catch(next)
 }
