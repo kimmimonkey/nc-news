@@ -1,4 +1,4 @@
-const { fetchAllTopics, fetchAllEndpoints, fetchArticleById, fetchAllArticles, fetchArticleComments, addComment } = require("../models/appModel")
+const { fetchAllTopics, fetchAllEndpoints, fetchArticleById, fetchAllArticles, fetchArticleComments, addComment, updateArticleVotes } = require("../models/appModel")
 
 
 exports.getAllTopics = (req, res, next) => {
@@ -49,6 +49,17 @@ exports.postComment = (req, res, next) => {
             res.status(201).send({ comment: rows[0] })
         })
         .catch(next);
-
 }
 
+exports.patchArticle = (req, res, next) => { 
+    const { article_id } = req.params; 
+    const { inc_votes } = req.body;
+    if (!inc_votes) {
+        return res.status(400).send({msg: "Invalid input"})
+    } 
+    updateArticleVotes(article_id, inc_votes)
+    .then((article) => {
+        res.status(200).send({ article })
+    })
+    .catch(next)
+}
