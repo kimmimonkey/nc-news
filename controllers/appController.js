@@ -1,4 +1,4 @@
-const { fetchAllTopics, fetchAllEndpoints, fetchArticleById, fetchAllArticles, fetchArticleComments, addComment, updateArticleVotes, removeCommentById } = require("../models/appModel")
+const { fetchAllTopics, fetchAllEndpoints, fetchArticleById, fetchAllArticles, fetchArticleComments, fetchAllUsers, addComment, updateArticleVotes, removeCommentById } = require("../models/appModel")
 
 
 exports.getAllTopics = (req, res, next) => {
@@ -37,6 +37,14 @@ exports.getArticleComments = (req, res, next) => {
         .catch(next);
 };
 
+exports.getAllUsers = (req, res, next) => { 
+    fetchAllUsers()
+    .then((users) => {
+        return res.status(200).send({ users })
+    })
+    .catch(next)
+};
+
 exports.postComment = (req, res, next) => {
     const { article_id } = req.params;
     const { username, body } = req.body;
@@ -66,7 +74,6 @@ exports.patchArticle = (req, res, next) => {
 
 exports.deleteComment = (req, res, next) => {
     const { comment_id } = req.params
-    console.log(comment_id)
     if (!comment_id) {
         return res.status(400).send({msg: "Invalid input"})
     }

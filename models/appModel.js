@@ -67,6 +67,12 @@ exports.fetchArticleComments = (article_id) => {
         })
 }
 
+exports.fetchAllUsers = () => { 
+    return db
+    .query(`SELECT * FROM users;`)
+    .then((users => users.rows));
+}
+
 exports.addComment = (article_id, username, comment, date) => {
     return db
         .query(`SELECT * from articles WHERE article_id = $1`, [article_id])
