@@ -99,7 +99,7 @@ describe("GET /api/articles/:article_id", () => {
     })
 })
 
-describe("/api/articles", () => {
+describe("GET /api/articles", () => {
     test("status: 200, responds with an array of article objects with the properties author, title, article_id, topic, created_at, votes, article_img_url and comment_count", () => {
         return request(app)
             .get("/api/articles")
@@ -300,6 +300,7 @@ describe("DELETE /api/comments/:comment_id", () => {
             expect(body.msg).toBe("Invalid input")
         })
     })
+
     test("status: 400, responds with an error when passed a valid comment_id that doesn't exist", () => {
         return request(app)
         .delete("/api/comments/9999")
@@ -308,5 +309,5 @@ describe("DELETE /api/comments/:comment_id", () => {
             expect(body.msg).toBe("Not found")
         })
     })
-
 })
+
