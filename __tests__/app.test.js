@@ -88,7 +88,7 @@ describe("GET /api/articles/:article_id", () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("Invalid input")
             })
-    })
+        })
     test("status: 404, responds with an error message when passed a valid article_id that doesn't exist in the database", () => {
         return request(app)
             .get("/api/articles/9999")
@@ -102,7 +102,7 @@ describe("GET /api/articles/:article_id", () => {
 describe("GET /api/articles", () => {
     test("status: 200, responds with an array of article objects with the properties author, title, article_id, topic, created_at, votes, article_img_url and comment_count", () => {
         return request(app)
-            .get("/api/articles")
+        .get("/api/articles")
             .expect(200)
             .then((({ body: { articles } }) => {
                 expect(articles.length).toBe(13)
@@ -122,7 +122,7 @@ describe("GET /api/articles", () => {
     })
     test("responds with articles sorted by date in descending order", () => {
         return request(app)
-            .get("/api/articles")
+        .get("/api/articles")
             .then((({ body: { articles } }) => {
                 expect(articles).toBeSortedBy("created_at", { descending: true })
             }))
@@ -132,37 +132,55 @@ describe("GET /api/articles", () => {
 describe("GET /api/articles/:article_id/comments", () => {
     test("status: 200, responds with an array of comment objects on specified article, with the properties comment_id, votes, created_at, author, body and article_id", () => {
         return request(app)
-            .get("/api/articles/5/comments")
-            .expect(200)
-            .then(({ body: { comments } }) => {
-                expect(comments.length).toBe(2)
-                comments.forEach((comment) => {
-                    expect(comment).toMatchObject({
-                        comment_id: expect.any(Number),
-                        votes: expect.any(Number),
-                        created_at: expect.any(String),
-                        author: expect.any(String),
-                        body: expect.any(String),
-                        article_id: expect.any(Number)
-                    })
+        .get("/api/articles/5/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+            expect(comments.length).toBe(2)
+            comments.forEach((comment) => {
+                expect(comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    article_id: expect.any(Number)
                 })
             })
+        })
     })
     test("status: 400, responds with an error message when passed a bad article_id", () => {
         return request(app)
-            .get("/api/articles/notAnId/comments")
-            .expect(400)
-            .then(({ body }) => {
-                expect(body.msg).toBe("Invalid input")
-            })
+        .get("/api/articles/notAnId/comments")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Invalid input")
+        })
     })
     test("status: 404, responds with an error message when passed a valid article_id that doesn't exist in the database", () => {
         return request(app)
-            .get("/api/articles/9999/comments")
+        .get("/api/articles/9999/comments")
             .expect(404)
             .then(({ body }) => {
                 expect(body.msg).toBe("Not found")
             })
+    })
+})
+
+describe("GET /api/users", () => { 
+    test("status: 200, responds with an array of user objects with the properties username, name and avatar_irl", () => {
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((( {body : { users } }) => {
+            expect(users.length).toBe(4)
+            users.forEach((user) => {
+                expect(user).toMatchObject({
+                    username: expect.any(String),
+                    name: expect.any(String),
+                    avatar_url: expect.any(String)
+                })
+            })
+        }))
     })
 })
 

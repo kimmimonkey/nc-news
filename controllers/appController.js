@@ -1,4 +1,4 @@
-const { fetchAllTopics, fetchAllEndpoints, fetchArticleById, fetchAllArticles, fetchArticleComments, addComment, updateArticleVotes, removeCommentById } = require("../models/appModel")
+const { fetchAllTopics, fetchAllEndpoints, fetchArticleById, fetchAllArticles, fetchArticleComments, fetchAllUsers, addComment, updateArticleVotes, removeCommentById } = require("../models/appModel")
 
 
 exports.getAllTopics = (req, res, next) => {
@@ -35,6 +35,14 @@ exports.getArticleComments = (req, res, next) => {
     const { article_id } = req.params;
     fetchArticleComments(article_id).then((comments) => res.status(200).send({ comments }))
         .catch(next);
+};
+
+exports.getAllUsers = (req, res, next) => { 
+    fetchAllUsers()
+    .then((users) => {
+        return res.status(200).send({ users })
+    })
+    .catch(next)
 };
 
 exports.postComment = (req, res, next) => {
