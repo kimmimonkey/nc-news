@@ -282,7 +282,7 @@ describe("PATCH /api/articles/:article_id", () => {
 
 })
 
-describe("DELETE /api/comments/:comment_id", () => {
+describe.only("DELETE /api/comments/:comment_id", () => {
     test("status: 204, no response body", () => {
         return request(app)
         .delete("/api/comments/3")
@@ -292,16 +292,21 @@ describe("DELETE /api/comments/:comment_id", () => {
         })
     })
 
-//     test.only("status: 400, responds with an error when passed a bad comment_id", () => {
-//         return request(app)
-//         .delete("/api/comments/notAnId")
-//         .expect(400)
-//         .then(({ body }) => {
-//             expect(body.msg).toBe("Invalid input")
-//         })
-//     })
+    test("status: 400, responds with an error when passed a bad comment_id", () => {
+        return request(app)
+        .delete("/api/comments/notAnId")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Invalid input")
+        })
+    })
+    test("status: 400, responds with an error when passed a valid comment_id that doesn't exist", () => {
+        return request(app)
+        .delete("/api/comments/9999")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Not found")
+        })
+    })
 
 })
-
-// // finish 400 
-// // 404 : comment doesn't exist 
