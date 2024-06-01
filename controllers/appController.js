@@ -66,7 +66,6 @@ exports.patchArticle = (req, res, next) => {
 
 exports.deleteComment = (req, res, next) => {
     const { comment_id } = req.params
-    console.log(comment_id)
     if (!comment_id) {
         return res.status(400).send({msg: "Invalid input"})
     }
