@@ -18,8 +18,9 @@ exports.getAllEndpoints = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-    const { sort_by } = req.query;
-    fetchAllArticles(sort_by)
+    const { sort_by, order } = req.query
+    const topic = req.query.topic
+    fetchAllArticles(topic, sort_by, order)
         .then((articles) => {
             return res.status(200).send({ articles });
         });
