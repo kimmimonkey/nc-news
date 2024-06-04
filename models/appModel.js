@@ -13,29 +13,46 @@ exports.fetchAllEndpoints = async () => {
     return endpoints;
 }
 
-exports.fetchAllArticles = (sort_by = "created_at", order = "DESC") => {
-    return db
-        .query(`
-    SELECT 
-        articles.author, 
-        articles.title, 
-        articles.article_id, 
-        articles.topic, 
-        articles.created_at, 
-        articles.votes, 
-        articles.article_img_url,
-    COUNT(comments.comment_id)::INT AS comment_count
-    FROM 
-        articles 
-    LEFT JOIN 
-        comments
-    ON 
-        articles.article_id = comments.article_id
-    GROUP BY 
-        articles.article_id
-    ORDER BY ${sort_by} ${order};`)
-        .then((articles) => articles.rows)
+exports.fetchAllArticles = (topic, sort_by = "created_at", order = "DESC") => {
+     const validSortColumns = ["topic", "created_at", "article_id"]
+    const validOrders = ["ASC", "DESC"]
 
+    if (!validSortColumns.includes(sort_by)) {
+        return Promise.reject({ status: 400, msg: "Invalid sort query" })
+    }
+    if (!validOrders.includes(order)) {
+        return Promise.reject({ status: 400, msg: "Invalid order query" })
+    }
+
+    let queryStr = `
+    SELECT articles.author,
+    articles.title, 
+    articles.article_id, 
+    articles.topic, 
+    articles.created_at, 
+    articles.votes, 
+    articles.article_img_url,
+    COUNT(comments.comment_id)::INT AS comment_count
+    FROM articles
+    LEFT JOIN
+    comments
+    ON articles.article_id = comments.article_id
+    `
+
+    const queryValues = [];
+
+    if (topic) {
+        queryStr += `WHERE articles.topic = $1 `;
+        queryValues.push(topic);
+    }
+
+    queryStr += `
+    GROUP BY articles.article_id 
+    ORDER BY ${sort_by} ${order};`;
+
+    return db
+        .query(queryStr, queryValues)
+        .then(({ rows: articles }) => articles)
 }
 
 exports.fetchArticleById = (article_id) => {
@@ -67,10 +84,10 @@ exports.fetchArticleComments = (article_id) => {
         })
 }
 
-exports.fetchAllUsers = () => { 
+exports.fetchAllUsers = () => {
     return db
-    .query(`SELECT * FROM users;`)
-    .then((users => users.rows));
+        .query(`SELECT * FROM users;`)
+        .then((users => users.rows));
 }
 
 exports.addComment = (article_id, username, comment, date) => {
@@ -132,7 +149,8 @@ exports.removeCommentById = (comment_id) => {
                 })
             }
         })
-    .then(() =>{
-    return db
-    .query(`DELETE FROM comments WHERE comment_id = $1;`, [comment_id])})
+        .then(() => {
+            return db
+                .query(`DELETE FROM comments WHERE comment_id = $1;`, [comment_id])
+        })
 }
