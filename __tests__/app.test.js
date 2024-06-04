@@ -99,7 +99,7 @@ describe("GET /api/articles/:article_id", () => {
     })
 })
 
-describe.only("GET /api/articles", () => {
+describe("GET /api/articles", () => {
     test("status: 200, responds with an array of article objects with the properties author, title, article_id, topic, created_at, votes, article_img_url and comment_count", () => {
         return request(app)
             .get("/api/articles")
@@ -127,7 +127,7 @@ describe.only("GET /api/articles", () => {
                 expect(articles).toBeSortedBy("created_at", { descending: true })
             }))
     })
-    test("status: 200, responds with an array of articles that match the filter query", () => {
+    test("status: 200, responds with an array of articles that match sort_by query", () => {
         return request(app)
             .get("/api/articles?topic=mitch")
             .expect(200)
@@ -139,6 +139,23 @@ describe.only("GET /api/articles", () => {
                 })
             })
     })
+    test("status: 400, responds with an error message when passed an invalid sort_by query",() => {
+        return request(app)
+        .get("/api/articles?sort_by=author")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Invalid sort query")
+        }) 
+     })
+     test("status: 400, respods with an error message when passed an invalid order query", () => { 
+        return request(app) 
+        .get("/api/articles?order=notAnOrder")
+        .then(({ body }) => {
+            expect(body.msg).toBe("Invalid order query")
+        }) 
+     })
+
+    // invalid value for order 
 })
 
     describe("GET /api/articles/:article_id/comments", () => {

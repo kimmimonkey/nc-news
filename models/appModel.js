@@ -14,16 +14,14 @@ exports.fetchAllEndpoints = async () => {
 }
 
 exports.fetchAllArticles = (topic, sort_by = "created_at", order = "DESC") => {
-    const validSortColumns = ["topic", "created_at", "article_id"]
+     const validSortColumns = ["topic", "created_at", "article_id"]
     const validOrders = ["ASC", "DESC"]
 
     if (!validSortColumns.includes(sort_by)) {
-        console.log("sorting by created_at")
-        sort_by = "created_at"
+        return Promise.reject({ status: 400, msg: "Invalid sort query" })
     }
     if (!validOrders.includes(order)) {
-        console.log("ordering by DESC")
-        order = "DESC"
+        return Promise.reject({ status: 400, msg: "Invalid order query" })
     }
 
     let queryStr = `
@@ -49,11 +47,9 @@ exports.fetchAllArticles = (topic, sort_by = "created_at", order = "DESC") => {
     }
 
     queryStr += `
-    GROUP BY 
-    articles.article_id
-    ORDER BY ${sort_by} ${order};`
-        ;
-        
+    GROUP BY articles.article_id 
+    ORDER BY ${sort_by} ${order};`;
+
     return db
         .query(queryStr, queryValues)
         .then(({ rows: articles }) => articles)
